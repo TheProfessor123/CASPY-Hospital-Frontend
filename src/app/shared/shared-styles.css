@@ -1,0 +1,105 @@
+/* Essential Custom Styles - Cannot be achieved with Bootstrap alone */
+
+/* Custom Alert Enhancements */
+.alert-custom {
+  border-left: 4px solid;
+  border-radius: 0.75rem;
+}
+
+.alert-custom.alert-success {
+  border-left-color: #28a745;
+}
+
+.alert-custom.alert-danger {
+  border-left-color: #dc3545;
+}
+
+.alert-custom.alert-warning {
+  border-left-color: #ffc107;
+}
+
+.alert-custom.alert-info {
+  border-left-color: #17a2b8;
+}
+
+/* Custom Card Hover Effects - Bootstrap doesn't have hover transforms */
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Custom Button Hover Effects - Bootstrap doesn't have hover transforms */
+.btn-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+}
+
+/* Custom Form Enhancements - Subtle improvements over Bootstrap */
+.form-control-enhanced {
+  transition: transform 0.3s ease;
+}
+
+.form-control-enhanced:focus {
+  transform: translateY(-1px);
+}
+
+/* Custom Table Enhancements */
+.table-hover-enhanced tbody tr {
+  transition: transform 0.2s ease;
+}
+
+.table-hover-enhanced tbody tr:hover {
+  transform: scale(1.01);
+}
+
+/* Custom Background Gradients - Bootstrap doesn't have gradient utilities */
+.bg-gradient-light {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+}
+
+
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-up {
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Status Indicators */
+.status-indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.status-success { background-color: #28a745; }
+.status-warning { background-color: #ffc107; }
+.status-danger { background-color: #dc3545; }
+.status-info { background-color: #17a2b8; } 

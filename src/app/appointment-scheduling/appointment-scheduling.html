@@ -1,0 +1,375 @@
+<div class="bg-gradient-light min-vh-100 py-5">
+  <div class="container">
+    <div class="bg-gradient-primary text-white p-4 rounded-top text-center mb-0">
+      <h1 class="display-5 fw-bold mb-2"><i class="fas fa-calendar-plus me-3"></i>Healthcare Appointment System</h1>
+      <p class="lead mb-0 opacity-75">Book, Update, and Manage Your Medical Appointments</p>
+    </div>
+
+    <div class="bg-white rounded-bottom shadow p-4">
+      <!-- Success/Error Messages -->
+      <div *ngIf="successMessage" class="alert alert-success alert-custom text-center mb-4">
+        <i class="fas fa-check-circle me-2"></i>{{successMessage}}
+      </div>
+      <div *ngIf="errorMessage" class="alert alert-danger alert-custom text-center mb-4">
+        <i class="fas fa-exclamation-circle me-2"></i>{{errorMessage}}
+      </div>
+
+      <!-- Book Appointment Form -->
+      <div class="card border-0 shadow rounded-3 mb-5 card-hover">
+        <div class="card-header bg-success text-white border-0 p-4">
+          <h3 class="mb-0 fw-bold"><i class="fas fa-calendar-plus me-2"></i>Book New Appointment</h3>
+        </div>
+        <div class="card-body p-5">
+        <div class="text-center mb-4">
+          <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 rounded-circle p-3 mb-3">
+            <i class="fas fa-calendar-plus fa-2x text-primary"></i>
+          </div>
+          <h3 class="text-primary fw-bold">Book New Appointment</h3>
+          <p class="text-muted">Schedule your medical consultation</p>
+        </div>
+        <form #bookForm="ngForm" (ngSubmit)="onBookAppointment(bookForm.value)">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">
+                <i class="fas fa-user me-2 text-info"></i>Patient ID <span class="text-danger">*</span>
+              </label>
+                             <input type="number" class="form-control form-control-enhanced rounded-3" name="patientId" 
+                     [(ngModel)]="patientId" 
+                     placeholder="Enter Patient ID" 
+                     [readonly]="patientId > 0"
+                     required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">
+                <i class="fas fa-user-circle me-2 text-success"></i>Patient Name <span class="text-danger">*</span>
+              </label>
+                             <input type="text" class="form-control form-control-enhanced rounded-3" name="patientName" 
+                     [(ngModel)]="patientName" 
+                     placeholder="Enter Patient Name" 
+                     [readonly]="patientName !== ''"
+                     required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">
+                <i class="fas fa-envelope me-2 text-primary"></i>Patient Email <span class="text-danger">*</span>
+              </label>
+                             <input type="email" class="form-control form-control-enhanced rounded-3" name="patientEmail" 
+                     [(ngModel)]="patientEmail" 
+                     placeholder="Enter Patient Email" 
+                     [readonly]="patientEmail !== ''"
+                     required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">
+                <i class="fas fa-stethoscope me-2 text-primary"></i>Specialisation <span class="text-danger">*</span>
+              </label>
+              <select class="form-select" [(ngModel)]="selectedSpecialisation" (ngModelChange)="onSpecialisationChange()" name="specialisation" required>
+                <option value="">Select Medical Specialisation</option>
+                <option *ngFor="let spec of specialisations" [value]="spec">
+                  <i class="fas fa-user-md me-2"></i>{{spec}}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">
+                <i class="fas fa-user-md me-2 text-success"></i>Doctor <span class="text-danger">*</span>
+              </label>
+              <select class="form-select" [(ngModel)]="selectedDoctor" name="doctor" required [disabled]="!selectedSpecialisation" (ngModelChange)="onDoctorChange()">
+                <option value="">{{selectedSpecialisation ? 'Choose Your Doctor' : 'Select Specialisation First'}}</option>
+                <option *ngFor="let doctor of doctors" [ngValue]="doctor">
+                  <i class="fas fa-user-md me-2"></i>Dr. {{doctor.name}} (ID: {{doctor.id}})
+                </option>
+              </select>
+              <div *ngIf="!selectedSpecialisation" class="form-text text-muted">
+                <i class="fas fa-info-circle me-1"></i>Please select a specialisation first
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Appointment Date <span class="text-danger">*</span></label>
+              <input type="date" class="form-control" name="date" [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" [min]="getTodayDate()" required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Available Time Slots <span class="text-danger">*</span></label>
+              <select class="form-select" name="slot" [(ngModel)]="selectedSlot" required [disabled]="!selectedDoctor || !selectedDate" (ngModelChange)="onSlotChange($event)">
+                <option value="">{{availableSlots.length ? 'Choose Available Slot' : 'Select Doctor & Date First'}}</option>
+                <option *ngFor="let slot of availableSlots" [value]="slot">{{slot}}</option>
+              </select>
+              <div *ngIf="selectedDoctor && selectedDate && availableSlots.length === 0" class="form-text text-danger">
+                <i class="fas fa-calendar-times me-1"></i>Doctor is not free on selected date
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Start Time</label>
+              <input type="time" class="form-control" name="startTime" [(ngModel)]="selectedStartTime" required readonly>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">End Time</label>
+              <input type="time" class="form-control" name="endTime" [(ngModel)]="selectedEndTime" required readonly>
+            </div>
+          </div>
+          <div class="mb-4">
+            <label class="form-label">Reason (Optional)</label>
+            <input type="text" class="form-control" name="reason" placeholder="Enter reason for appointment" ngModel>
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg btn-hover fw-bold px-5 py-3 rounded-3" [disabled]="isBookingAppointment">
+              @if (isBookingAppointment) {
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                <i class="fas fa-search me-2"></i>Checking Availability...
+              } @else {
+                <i class="fas fa-calendar-plus me-2"></i>Book My Appointment
+                <i class="fas fa-arrow-right ms-2"></i>
+              }
+            </button>
+          </div>
+          
+          @if (isBookingAppointment) {
+            <div class="text-center mt-3">
+              <div class="alert alert-info d-inline-block">
+                <div class="d-flex align-items-center">
+                  <div class="spinner-border spinner-border-sm text-primary me-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <div>
+                    <strong>Processing your appointment...</strong><br>
+                    <small class="text-muted">Checking doctor availability and sending notifications</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </form>
+      </div>
+    </div>
+
+    <!-- Update Appointment Form -->
+    <div id="update-form" class="card shadow border-0 mb-5" *ngIf="showUpdateForm">
+      <div class="card-body p-5">
+        <div class="text-center mb-4">
+          <div class="d-inline-flex align-items-center justify-content-center bg-warning bg-opacity-10 rounded-circle p-3 mb-3">
+            <i class="fas fa-edit fa-2x text-warning"></i>
+          </div>
+          <h3 class="text-warning fw-bold">Update Appointment</h3>
+          <p class="text-muted">Modify your existing appointment details</p>
+        </div>
+        <form #updateForm="ngForm" (ngSubmit)="onUpdateAppointment(updateForm.value)">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Appointment ID <span class="text-danger">*</span></label>
+              <input type="number" class="form-control" name="id" placeholder="Enter Appointment ID" [(ngModel)]="updateFormData.id" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">New Date <span class="text-danger">*</span></label>
+              <input type="date" class="form-control" name="newDate" [(ngModel)]="updateFormData.newDate" required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">New Time Slot <span class="text-danger">*</span></label>
+              <select class="form-select" name="newSlot" [(ngModel)]="selectedUpdateSlot" required (ngModelChange)="onUpdateSlotChange($event, updateForm)">
+                <option value="">Select New Time Slot</option>
+                <option *ngFor="let slot of timeSlots" [value]="slot.value">{{slot.label}}</option>
+              </select>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Start Time</label>
+              <input type="time" class="form-control" name="startTime" [(ngModel)]="selectedUpdateStartTime" required readonly>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">End Time</label>
+              <input type="time" class="form-control" name="endTime" [(ngModel)]="selectedUpdateEndTime" required readonly>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Patient Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="patientName" placeholder="Enter Patient Name" ngModel required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Patient Email <span class="text-danger">*</span></label>
+              <input type="email" class="form-control" name="patientEmail" placeholder="Enter Patient Email" ngModel required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Doctor Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="doctorName" placeholder="Enter Doctor Name" [value]="updateFormData.doctorName || ''" ngModel required>
+            </div>
+            <div class="col-md-6 mb-4">
+              <label class="form-label">Reason for Update <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="reason" placeholder="Enter reason for update" ngModel required>
+            </div>
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-warning btn-lg px-5 py-3" [disabled]="isReschedulingAppointment">
+              @if (isReschedulingAppointment) {
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                <i class="fas fa-search me-2"></i>Checking Availability...
+              } @else {
+                <i class="fas fa-edit me-2"></i>Update My Appointment
+                <i class="fas fa-check ms-2"></i>
+              }
+            </button>
+          </div>
+          
+          @if (isReschedulingAppointment) {
+            <div class="text-center mt-3">
+              <div class="alert alert-warning d-inline-block">
+                <div class="d-flex align-items-center">
+                  <div class="spinner-border spinner-border-sm text-warning me-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <div>
+                    <strong>Rescheduling your appointment...</strong><br>
+                    <small class="text-muted">Checking doctor availability and sending notifications</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </form>
+      </div>
+    </div>
+
+    <!-- Cancel Appointment Form -->
+    <div id="cancel-form" class="card shadow border-0 mb-5" *ngIf="showCancelForm">
+      <div class="card-body p-5">
+        <div class="text-center mb-4">
+          <div class="d-inline-flex align-items-center justify-content-center bg-danger bg-opacity-10 rounded-circle p-3 mb-3">
+            <i class="fas fa-times-circle fa-2x text-danger"></i>
+          </div>
+          <h3 class="text-danger fw-bold">Cancel Appointment</h3>
+          <p class="text-muted">Cancel your scheduled appointment</p>
+        </div>
+        <form #cancelForm="ngForm" (ngSubmit)="onCancelAppointment(cancelForm.value)">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Appointment ID <span class="text-danger">*</span></label>
+              <input type="number" class="form-control" name="id" placeholder="Enter Appointment ID" [(ngModel)]="cancelFormData.id" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Appointment Date <span class="text-danger">*</span></label>
+              <input type="date" class="form-control" name="date" [(ngModel)]="cancelFormData.date" required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Patient Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="patientName" placeholder="Enter Patient Name" [value]="cancelFormData.patientName || ''" ngModel required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Doctor Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="doctorName" placeholder="Enter Doctor Name" [value]="cancelFormData.doctorName || ''" ngModel required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Patient Email <span class="text-danger">*</span></label>
+              <input type="email" class="form-control" name="patientEmail" placeholder="Enter Patient Email" [value]="cancelFormData.patientEmail || ''" ngModel required>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Start Time <span class="text-danger">*</span></label>
+              <input type="time" class="form-control" name="startTime" [(ngModel)]="cancelFormData.startTime" required>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">End Time <span class="text-danger">*</span></label>
+              <input type="time" class="form-control" name="endTime" [(ngModel)]="cancelFormData.endTime" required>
+            </div>
+          </div>
+          <div class="mb-4">
+            <label class="form-label">Cancellation Reason <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="reason" placeholder="Enter reason for cancellation" ngModel required>
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-danger btn-lg px-5 py-3" [disabled]="isCancellingAppointment">
+              @if (isCancellingAppointment) {
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                <i class="fas fa-hourglass-half me-2"></i>Cancelling...
+              } @else {
+                <i class="fas fa-times-circle me-2"></i>Cancel My Appointment
+                <i class="fas fa-exclamation-triangle ms-2"></i>
+              }
+            </button>
+          </div>
+          
+          @if (isCancellingAppointment) {
+            <div class="text-center mt-3">
+              <div class="alert alert-danger d-inline-block">
+                <div class="d-flex align-items-center">
+                  <div class="spinner-border spinner-border-sm text-danger me-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <div>
+                    <strong>Cancelling your appointment...</strong><br>
+                    <small class="text-muted">Cancelling appointment and sending notifications</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </form>
+      </div>
+    </div>
+
+
+
+    <!-- Appointments List -->
+    <div class="card shadow border-0">
+      <div class="card-body p-5">
+        <div class="text-center mb-4">
+          <div class="d-inline-flex align-items-center justify-content-center bg-success bg-opacity-10 rounded-circle p-3 mb-3">
+            <i class="fas fa-list fa-2x text-success"></i>
+          </div>
+          <h3 class="text-success fw-bold">Your Appointments</h3>
+          <p class="text-muted">{{appointments.length}} appointment(s) found</p>
+        </div>
+        <div *ngIf="appointments.length === 0" class="text-center text-muted py-5">
+          <div class="bg-light rounded-3 p-5">
+            <i class="fas fa-calendar-times fa-4x mb-4 text-muted"></i>
+            <h4 class="mb-3">No Appointments Found</h4>
+            <p class="lead mb-0">Load patient appointments or book a new one to get started.</p>
+          </div>
+        </div>
+        <div class="row g-4" *ngIf="appointments.length > 0">
+          <div class="col-lg-6" *ngFor="let appointment of appointments">
+            <div class="card border-0 shadow-sm h-100 appointment-card">
+              <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h5 class="card-title mb-0">
+                    <i class="fas fa-calendar-check text-success me-2"></i>ID: {{appointment.id}}
+                  </h5>
+                  <span class="badge bg-success">{{appointment.status || 'BOOKED'}}</span>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <p class="mb-2"><strong>Patient ID:</strong> {{appointment.patientId}}</p>
+                    <p class="mb-2"><strong>Doctor ID:</strong> {{appointment.doctorId}}</p>
+                  </div>
+                  <div class="col-6">
+                    <p class="mb-2"><strong>Date:</strong> {{appointment.date}}</p>
+                    <p class="mb-2"><strong>Slot:</strong> {{appointment.slot}}</p>
+                  </div>
+                </div>
+                <div class="mt-3 d-flex gap-2" *ngIf="appointment.status !== 'CANCELLED'">
+                  <button class="btn btn-medical-reschedule btn-sm flex-fill" (click)="selectAppointmentForUpdate(appointment)">
+                    <i class="fas fa-calendar-alt me-1 btn-icon"></i>Reschedule
+                  </button>
+                  <button class="btn btn-medical-cancel btn-sm flex-fill" (click)="selectAppointmentForCancel(appointment)">
+                    <i class="fas fa-times me-1 btn-icon"></i>Cancel
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

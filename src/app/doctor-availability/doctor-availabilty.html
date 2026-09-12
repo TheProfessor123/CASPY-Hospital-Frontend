@@ -1,0 +1,251 @@
+<div class="bg-gradient-light min-vh-100 py-5">
+  <div class="container">
+    <div class="bg-gradient-primary text-white p-4 rounded-top text-center mb-0">
+      <h1 class="display-5 fw-bold mb-2">
+        <i class="fas fa-clock me-3"></i>
+        <span *ngIf="userRole === 'DOCTOR'">Doctor Availability Management</span>
+        <span *ngIf="userRole === 'PATIENT'">Find Available Doctors</span>
+        <span *ngIf="!userRole">Doctor Availability System</span>
+      </h1>
+      <p class="lead mb-0 opacity-75">
+        <span *ngIf="userRole === 'DOCTOR'">Manage your appointment schedule and availability slots</span>
+        <span *ngIf="userRole === 'PATIENT'">Search and book appointments with available doctors</span>
+        <span *ngIf="!userRole">Please login to access personalized features</span>
+      </p>
+    </div>
+    
+    <div class="bg-white rounded-bottom shadow p-4">
+ 
+  <div class="search-section">
+    <div class="section-header">
+      <h2 class="section-title">
+        <span *ngIf="userRole === 'DOCTOR'">My Schedule</span>
+        <span *ngIf="userRole === 'PATIENT'">Find Doctors</span>
+        <span *ngIf="!userRole">Search Availability</span>
+      </h2>
+      <div class="header-actions" *ngIf="userRole === 'DOCTOR'">
+        <div class="view-toggle">
+          <button class="toggle-btn" [class.active]="!showAppointments" (click)="showAppointments = false">Availability</button>
+          <button class="toggle-btn" [class.active]="showAppointments" (click)="toggleAppointmentsView()">Appointments</button>
+        </div>
+      </div>
+    </div>
+    <div class="search-form">
+      <div class="form-group">
+        <label class="form-label" *ngIf="userRole === 'PATIENT'">Doctor ID (Optional)</label>
+        <label class="form-label" *ngIf="userRole === 'DOCTOR'">Your Doctor ID</label>
+        <label class="form-label" *ngIf="!userRole">Doctor ID</label>
+        <input type="number" [(ngModel)]="searchDoctorID" 
+               [placeholder]="userRole === 'DOCTOR' ? 'Auto-filled from profile' : userRole === 'PATIENT' ? 'Leave empty to see all doctors' : 'Enter Doctor ID'" 
+               min="1" class="form-input" 
+               title="Enter a valid doctor ID">
+      </div>
+      <div class="form-group">
+        <label class="form-label">From Date</label>
+        <input type="date" [(ngModel)]="startDate" class="form-input" placeholder="Select start date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">To Date</label>
+        <input type="date" [(ngModel)]="endDate" class="form-input" placeholder="Select end date">
+      </div>
+      <div class="form-group">
+        <button (click)="searchAvailability()" class="btn-primary" [disabled]="isLoading">
+          <span *ngIf="!isLoading">
+            <span *ngIf="userRole === 'DOCTOR'">View Schedule</span>
+            <span *ngIf="userRole === 'PATIENT'">Search Doctors</span>
+            <span *ngIf="!userRole">Search</span>
+          </span>
+          <span *ngIf="isLoading">Searching...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+ 
+  <div *ngIf="message" class="feedback-message" [ngClass]="'feedback-' + messageType">
+    <span class="feedback-icon">{{ messageType === 'success' ? '✓' : messageType === 'error' ? '✗' : '!' }}</span>
+    {{ message }}
+  </div>
+ 
+  <!-- Appointments View -->
+  <div *ngIf="showAppointments && userRole === 'DOCTOR'" class="content-section">
+    <h2 class="section-title">Scheduled Appointments</h2>
+    <div class="summary-card" *ngIf="appointments.length > 0">
+      <strong>{{appointments.length}} Total Appointments</strong>
+    </div>
+    <div class="data-table" *ngIf="appointments.length > 0">
+      <table class="professional-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Patient</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let appointment of appointments; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ appointment.patientName }}</td>
+            <td>{{ appointment.date }}</td>
+            <td>{{ appointment.slot }}</td>
+            <td><span class="status-badge" [class]="'status-' + appointment.status?.toLowerCase().replace(' ', '-')">{{ appointment.status }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="appointments.length === 0" class="empty-state">
+      <p>No appointments scheduled yet.</p>
+    </div>
+  </div>
+
+  <!-- Availability View -->
+  <div *ngIf="!showAppointments && availabilities && availabilities.length > 0" class="content-section">
+    <h2 class="section-title">
+      <span *ngIf="userRole === 'DOCTOR'">Your Availability Schedule</span>
+      <span *ngIf="userRole === 'PATIENT'">Available Doctors</span>
+      <span *ngIf="!userRole">Available Schedules</span>
+    </h2>
+    
+    <div class="info-card success" *ngIf="userRole === 'PATIENT'">
+      <strong>Found {{availabilities.length}} available doctor(s)</strong> - Click "Book" to schedule your appointment
+    </div>
+    
+    <div class="info-card warning" *ngIf="userRole === 'DOCTOR'">
+      <strong>Schedule Overview:</strong> Managing {{availabilities.length}} availability slot(s)
+    </div>
+    
+    <div class="data-table">
+      <table class="professional-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Doctor</th>
+            <th>Date</th>
+            <th>Available Slots</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let availability of availabilities; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>
+              <div class="doctor-info">
+                <strong>{{ availability.doctorName || 'Dr. Atul Sahu' }}</strong>
+                <small>ID: {{ availability.doctorID }}</small>
+                <span class="specialty-badge" *ngIf="availability.specialty">{{ availability.specialty }}</span>
+              </div>
+            </td>
+            <td>{{ availability.date }}</td>
+            <td>
+              <div class="time-slots-inline">
+                <span *ngFor="let slot of availability.timeSlots" class="time-slot-mini">{{ slot }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button *ngIf="canManageAvailability() && isCurrentDoctor(availability.doctorID)" 
+                        (click)="openUpdateModal(availability)" class="btn-edit">Edit</button>
+                <button *ngIf="canManageAvailability() && isCurrentDoctor(availability.doctorID)" 
+                        (click)="deleteAvailability(availability.doctorID, availability.date)" class="btn-delete">Delete</button>
+                <button *ngIf="userRole === 'PATIENT'" 
+                        class="btn-book" (click)="bookAppointment(availability)">Book</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="add-section" *ngIf="canManageAvailability()">
+    <div class="form-container">
+      <h3 class="form-title">Add New Availability</h3>
+      <div class="info-card info">
+        <strong>Doctor Portal:</strong> Create your availability slots for patient appointments
+      </div>
+      <form (ngSubmit)="onSubmit()" #addForm="ngForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="doctorID" class="form-label required">Doctor ID</label>
+            <input type="number" id="doctorID" name="doctorID" [(ngModel)]="doctorID" required min="1" 
+                   class="form-input" readonly placeholder="Auto-filled">
+            <div class="field-hint">Auto-filled from your profile</div>
+          </div>
+          <div class="form-group">
+            <label for="doctorName" class="form-label">Doctor Name</label>
+            <input type="text" id="doctorName" name="doctorName" [(ngModel)]="doctorName" 
+                   class="form-input" readonly placeholder="Auto-filled">
+            <div class="field-hint">Auto-filled from your profile</div>
+          </div>
+          <div class="form-group">
+            <label for="specialty" class="form-label">Specialty</label>
+            <input type="text" id="specialty" name="specialty" [(ngModel)]="specialty" 
+                   class="form-input" readonly placeholder="Auto-filled">
+            <div class="field-hint">Auto-filled from your profile</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="date" class="form-label required">Date</label>
+          <input type="date" id="date" name="date" [(ngModel)]="date" required class="form-input" placeholder="Select date">
+          <div class="field-hint">Select a future date for availability</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label required">Select Time Slots (Max 8 slots)</label>
+          <div class="time-slots-grid">
+            <button *ngFor="let slot of availableTimeSlots" type="button" class="time-slot-btn" [class.selected]="isSlotSelected(slot)" (click)="toggleTimeSlot(slot)">
+              {{ slot }}
+            </button>
+          </div>
+          <div *ngIf="selectedTimeSlots && selectedTimeSlots.length > 0" class="selected-summary">
+            <strong>Selected: </strong>{{ selectedTimeSlots.length }} slot(s)
+          </div>
+        </div>
+        <button type="submit" class="btn-primary" [disabled]="isSubmitting || !doctorID || !date || !selectedTimeSlots || selectedTimeSlots.length === 0">
+          <span *ngIf="!isSubmitting">Add Availability</span>
+          <span *ngIf="isSubmitting">Adding...</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+ 
+<div *ngIf="showUpdateModal" class="modal-overlay" (click)="closeUpdateModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Update Availability</h3>
+      <button class="close-btn" (click)="closeUpdateModal()">×</button>
+    </div>
+    <form (ngSubmit)="onUpdateSubmit()" #updateForm="ngForm">
+      <div class="form-group">
+        <label for="updateDoctorID" class="form-label required">Doctor ID</label>
+        <input type="number" id="updateDoctorID" name="updateDoctorID" [(ngModel)]="updateDoctorID" required min="1" class="form-input" placeholder="Enter Doctor ID">
+        <div class="field-hint">Enter a valid doctor identification number</div>
+      </div>
+      <div class="form-group">
+        <label for="updateDate" class="form-label required">Date</label>
+        <input type="date" id="updateDate" name="updateDate" [(ngModel)]="updateDate" required class="form-input">
+        <div class="field-hint">Select a future date for availability</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label required">Select Time Slots (Max 8 slots)</label>
+        <div class="time-slots-grid">
+          <button *ngFor="let slot of availableTimeSlots" type="button" class="time-slot-btn" [class.selected]="isUpdateSlotSelected(slot)" (click)="toggleUpdateTimeSlot(slot)">
+            {{ slot }}
+          </button>
+        </div>
+        <div *ngIf="updateSelectedTimeSlots && updateSelectedTimeSlots.length > 0" class="selected-summary">
+          <strong>Selected: </strong>{{ updateSelectedTimeSlots.length }} slot(s)
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" (click)="closeUpdateModal()">Cancel</button>
+        <button type="submit" class="btn-primary" [disabled]="isSubmitting || !updateDoctorID || !updateDate || !updateSelectedTimeSlots || updateSelectedTimeSlots.length === 0">
+          <span *ngIf="!isSubmitting">Update Availability</span>
+          <span *ngIf="isSubmitting">Updating...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+

@@ -1,0 +1,1512 @@
+<!-- Professional Healthcare Website -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow">
+  <div class="container">
+    <a class="navbar-brand fw-bold fs-3" href="#">
+      <div class="logo-container d-flex align-items-center">
+        <div class="logo-icon me-2">
+          <i class="fas fa-heartbeat"></i>
+          <i class="fas fa-plus-circle"></i>
+        </div>
+        <div class="logo-text">
+          <span class="brand-caspy">CASPY</span>
+          <span class="brand-hospital">Hospital</span>
+        </div>
+      </div>
+    </a>
+    <div class="navbar-nav ms-auto d-flex align-items-center">
+      <a class="nav-link px-3 fw-bold" href="#home">Home</a>
+      <a class="nav-link px-3 fw-bold" href="#" (click)="scrollToServices(); $event.preventDefault()">Services</a>
+      <a class="nav-link px-3 fw-bold" href="#" (click)="showAbout(); $event.preventDefault()">About</a>
+      <a class="nav-link px-3 fw-bold" href="#" (click)="scrollToContact(); $event.preventDefault()">Contact</a>
+      <button class="btn btn-warning ms-3 fw-bold" (click)="showDoctorLogin()" *ngIf="!userRole">Doctor Portal</button>
+      
+      <!-- User Info Box -->
+      <div class="user-info-box ms-3" *ngIf="userRole">
+        <div class="dropdown">
+          <button class="btn btn-outline-light dropdown-toggle user-info-btn" type="button" data-bs-toggle="dropdown">
+            <i class="fas fa-user-circle me-2"></i>
+            <span class="user-name">{{userName}}</span>
+            <span class="user-role badge ms-2" [class.bg-warning]="userRole === 'DOCTOR'" [class.bg-success]="userRole === 'PATIENT'">{{userRole}}</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end user-dropdown">
+            <li class="dropdown-header">
+              <i class="fas fa-info-circle me-2"></i>User Information
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li class="px-3 py-2">
+              <small class="text-muted">Name:</small><br>
+              <strong>{{userName}}</strong>
+            </li>
+            <li class="px-3 py-2">
+              <small class="text-muted">Email:</small><br>
+              <strong>{{userEmail}}</strong>
+            </li>
+            <li class="px-3 py-2" *ngIf="userPhone">
+              <small class="text-muted">Phone:</small><br>
+              <strong>{{userPhone}}</strong>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <button class="dropdown-item text-danger" (click)="logout()">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section id="home" class="hero-section position-relative overflow-hidden">
+  <div class="hero-bg-overlay"></div>
+  <div class="floating-elements">
+    <div class="floating-icon floating-icon-1"><i class="fas fa-heartbeat"></i></div>
+    <div class="floating-icon floating-icon-2"><i class="fas fa-stethoscope"></i></div>
+    <div class="floating-icon floating-icon-3"><i class="fas fa-user-md"></i></div>
+    <div class="floating-icon floating-icon-4"><i class="fas fa-pills"></i></div>
+  </div>
+  <div class="container position-relative">
+    <div class="row align-items-center min-vh-100">
+      <div class="col-lg-7">
+        <div class="hero-content text-white">
+          <div class="hero-badge mb-4">
+            <span class="badge bg-light text-primary px-4 py-2 fs-6 fw-bold">
+              <i class="fas fa-certificate me-2"></i>JCI Accredited Medical Center
+            </span>
+          </div>
+          <h1 class="display-2 fw-bold mb-4 hero-title">
+            Advanced <span class="text-light position-relative">
+              Medical Care
+              <div class="title-underline"></div>
+            </span>
+          </h1>
+          <p class="lead fs-3 mb-5 hero-subtitle">
+            World-class healthcare facility delivering exceptional patient outcomes through 
+            cutting-edge medical technology and evidence-based treatment protocols.
+          </p>
+          <div class="d-flex flex-wrap gap-4 mb-5">
+            <button class="btn btn-light btn-lg px-5 py-3 hero-btn text-primary fw-bold" (click)="showLogin(); scrollToLogin()">
+              <i class="fas fa-calendar-plus me-2"></i>Schedule Consultation
+              <div class="btn-shine"></div>
+            </button>
+            <button class="btn btn-outline-light btn-lg px-5 py-3 hero-btn-outline" (click)="showEmergencyContact()">
+              <i class="fas fa-ambulance me-2"></i>Emergency Services
+            </button>
+          </div>
+          <div class="hero-features d-flex flex-wrap gap-4">
+            <div class="feature-item">
+              <i class="fas fa-user-md text-light me-2"></i>
+              <span>Board-Certified Physicians</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-hospital text-light me-2"></i>
+              <span>State-of-the-Art Facilities</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-heartbeat text-light me-2"></i>
+              <span>Patient-Centered Care</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="stats-card bg-white p-5 rounded-4 shadow-lg position-relative">
+          <div class="stats-bg-pattern"></div>
+          <h3 class="text-primary mb-4 fw-bold position-relative">
+            <i class="fas fa-chart-line me-2"></i>Our Impact
+          </h3>
+          <div class="row text-center position-relative">
+            <div class="col-6 mb-4">
+              <div class="stat-item">
+                <h2 class="text-success fw-bold display-5 counter" data-target="5000">5K+</h2>
+                <p class="text-dark mb-1 fw-semibold">Patients Cured</p>
+                <small class="text-muted">Successfully treated with 98% recovery rate</small>
+                <div class="stat-icon"><i class="fas fa-user-check"></i></div>
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div class="stat-item">
+                <h2 class="text-info fw-bold display-5 counter" data-target="200">200+</h2>
+                <p class="text-dark mb-1 fw-semibold">Expert Doctors</p>
+                <small class="text-muted">Board-certified specialists available</small>
+                <div class="stat-icon"><i class="fas fa-user-md"></i></div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stat-item">
+                <h2 class="text-warning fw-bold display-5 counter" data-target="15">15+</h2>
+                <p class="text-dark mb-1 fw-semibold">Medical Specialties</p>
+                <small class="text-muted">Comprehensive healthcare services</small>
+                <div class="stat-icon"><i class="fas fa-hospital"></i></div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stat-item">
+                <h2 class="text-danger fw-bold display-5">24/7</h2>
+                <p class="text-dark mb-1 fw-semibold">Emergency Care</p>
+                <small class="text-muted">Round-the-clock medical assistance</small>
+                <div class="stat-icon"><i class="fas fa-ambulance"></i></div>
+              </div>
+            </div>
+          </div>
+          <div class="trust-badges mt-4 pt-4 border-top">
+            <div class="d-flex justify-content-around align-items-center">
+              <div class="trust-badge">
+                <i class="fas fa-star text-warning"></i>
+                <small class="text-muted ms-1">4.9/5 Rating</small>
+              </div>
+              <div class="trust-badge">
+                <i class="fas fa-thumbs-up text-success"></i>
+                <small class="text-muted ms-1">99% Satisfaction</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- User Management Section -->
+<section id="user-management" class="py-5 bg-light" *ngIf="currentView === 'login' || currentView === 'register'">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="text-center mb-5">
+          <h2 class="display-4 fw-bold text-primary">Patient Portal</h2>
+          <div class="btn-group" role="group">
+            <button class="btn btn-outline-primary" [class.active]="currentView === 'login'" (click)="showLogin()">Login</button>
+            <button class="btn btn-outline-primary" [class.active]="currentView === 'register'" (click)="showRegister()">Register</button>
+          </div>
+        </div>
+        
+        <div class="card shadow border-0">
+          <div class="card-body p-5">
+            <div *ngIf="currentView === 'login'">
+              <h3 class="text-center mb-4">Patient Login</h3>
+              <form (ngSubmit)="login()" #loginForm="ngForm">
+                <div class="mb-3">
+                  <label class="form-label">Email Address</label>
+                  <input type="email" class="form-control form-control-lg" 
+                         [(ngModel)]="loginData.email" 
+                         name="loginEmail" 
+                         [class.is-invalid]="validationErrors.login.email"
+                         required>
+                  <div class="invalid-feedback" *ngIf="validationErrors.login.email">
+                    {{validationErrors.login.email}}
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label class="form-label">Password</label>
+                  <div class="input-group">
+                    <input [type]="showLoginPassword ? 'text' : 'password'" class="form-control form-control-lg" 
+                           [(ngModel)]="loginData.password" 
+                           name="loginPassword" 
+                           [class.is-invalid]="validationErrors.login.password"
+                           required>
+                    <button class="btn btn-outline-secondary" type="button" (click)="showLoginPassword = !showLoginPassword">
+                      <i class="fas" [class.fa-eye]="!showLoginPassword" [class.fa-eye-slash]="showLoginPassword"></i>
+                    </button>
+                  </div>
+                  <div class="invalid-feedback" *ngIf="validationErrors.login.password">
+                    {{validationErrors.login.password}}
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">Sign In</button>
+              </form>
+              <div class="text-center">
+                <p class="mb-2">Don't have an account?</p>
+                <button class="btn btn-outline-secondary" (click)="showRegister()">
+                  <i class="fas fa-user-plus me-2"></i>Register as New User
+                </button>
+              </div>
+            </div>
+            
+            <div *ngIf="currentView === 'register'">
+              <h3 class="text-center mb-4">Patient Registration</h3>
+              
+              <!-- Success Message -->
+              <div *ngIf="registrationSuccess" class="alert alert-success text-center mb-4">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong>Registration Successful!</strong> Patient successfully registered.
+              </div>
+              
+              <form (ngSubmit)="register()" #registerForm="ngForm">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Full Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" 
+                           [(ngModel)]="registrationData.fullName" 
+                           name="fullName" 
+                           [class.is-invalid]="validationErrors.registration.fullName"
+                           placeholder="Enter your full name"
+                           required>
+                    <div class="invalid-feedback" *ngIf="validationErrors.registration.fullName">
+                      {{validationErrors.registration.fullName}}
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Email <span class="text-danger">*</span></label>
+                    <input type="email" class="form-control" 
+                           [(ngModel)]="registrationData.email" 
+                           name="email" 
+                           [class.is-invalid]="validationErrors.registration.email"
+                           placeholder="Enter your email address"
+                           required>
+                    <div class="invalid-feedback" *ngIf="validationErrors.registration.email">
+                      {{validationErrors.registration.email}}
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Phone <span class="text-danger">*</span></label>
+                    <input type="tel" class="form-control" 
+                           [(ngModel)]="registrationData.phone" 
+                           name="phone" 
+                           [class.is-invalid]="validationErrors.registration.phone"
+                           placeholder="Enter 10-digit mobile number"
+                           maxlength="10"
+                           required>
+                    <div class="invalid-feedback" *ngIf="validationErrors.registration.phone">
+                      {{validationErrors.registration.phone}}
+                    </div>
+                    <div class="form-text">Enter Indian mobile number (10 digits)</div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
+                    <input type="date" class="form-control" 
+                           [(ngModel)]="registrationData.dateOfBirth" 
+                           name="dateOfBirth" 
+                           [class.is-invalid]="validationErrors.registration.dateOfBirth"
+                           required>
+                    <div class="invalid-feedback" *ngIf="validationErrors.registration.dateOfBirth">
+                      {{validationErrors.registration.dateOfBirth}}
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Password <span class="text-danger">*</span></label>
+                  <input type="password" class="form-control" 
+                         [(ngModel)]="registrationData.password" 
+                         name="password" 
+                         [class.is-invalid]="validationErrors.registration.password"
+                         placeholder="Create a strong password"
+                         required>
+                  <div class="invalid-feedback" *ngIf="validationErrors.registration.password">
+                    {{validationErrors.registration.password}}
+                  </div>
+                  <div class="form-text">Password must be at least 8 characters with uppercase, lowercase, and number</div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg w-100">Create Account</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Patient Dashboard -->
+<section id="dashboard" class="py-5" *ngIf="currentView === 'dashboard'">
+  <div class="container">
+    <!-- Welcome Header -->
+    <div class="row mb-5">
+      <div class="col-12">
+        <div class="bg-primary text-white p-4 rounded-4">
+          <h2 class="mb-0">
+            <i class="fas fa-user-circle me-3"></i>Welcome, {{userName}}!
+          </h2>
+          <p class="mb-0 mt-2">Manage your healthcare journey with CASPY Hospital</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Dashboard Cards -->
+    <div class="row g-4 justify-content-center">
+      <div class="col-lg-4 col-md-6">
+        <div class="card h-100 shadow border-0">
+          <div class="card-body text-center p-4">
+            <i class="fas fa-calendar-plus fa-4x text-success mb-3"></i>
+            <h4>Schedule Appointment</h4>
+            <p class="text-muted mb-4">Book new appointments with available doctors</p>
+            <button class="btn btn-success" (click)="showAppointmentHistory()">Book Appointment</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 col-md-6">
+        <div class="card h-100 shadow border-0">
+          <div class="card-body text-center p-4">
+            <i class="fas fa-file-medical fa-4x text-info mb-3"></i>
+            <h4>Medical History</h4>
+            <p class="text-muted mb-4">Access your medical records and reports</p>
+            <button class="btn btn-info" (click)="showMedicalHistory()">View Records</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+
+    <!-- Logout Button -->
+    <div class="row mt-5">
+      <div class="col-12 text-center">
+        <button class="btn btn-outline-danger" (click)="logout()">
+          <i class="fas fa-sign-out-alt me-2"></i>Logout
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="py-5 bg-light" *ngIf="currentView === 'about'">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="text-center mb-5">
+          <h2 class="display-3 fw-bold text-primary mb-4">
+            <i class="fas fa-hospital-alt me-3 text-warning"></i>About CASPY Hospital
+          </h2>
+          <p class="lead text-muted">Care And Support for Patients Year-round</p>
+        </div>
+        
+        <div class="card shadow border-0 mb-5">
+          <div class="card-body p-5">
+            <div class="row align-items-center">
+              <div class="col-lg-6">
+                <h3 class="text-primary mb-4">🌟 Our Mission</h3>
+                <p class="lead mb-4">
+                  Welcome to CASPY Hospital, where compassion meets cutting-edge care. We are dedicated to providing year-round medical support with a focus on patient well-being, trust, and excellence.
+                </p>
+                <p class="mb-4">
+                  From routine checkups to specialized treatments, our team is here to serve you with empathy and expertise. We believe that every patient deserves personalized care that addresses not just their medical needs, but their emotional and psychological well-being as well.
+                </p>
+              </div>
+              <div class="col-lg-6">
+                <div class="bg-primary bg-opacity-10 p-4 rounded-4">
+                  <h4 class="text-primary mb-3">Our Core Values</h4>
+                  <ul class="list-unstyled">
+                    <li class="mb-2"><i class="fas fa-heart text-danger me-2"></i><strong>Compassion:</strong> Caring for every patient with empathy</li>
+                    <li class="mb-2"><i class="fas fa-shield-alt text-success me-2"></i><strong>Trust:</strong> Building lasting relationships through reliability</li>
+                    <li class="mb-2"><i class="fas fa-star text-warning me-2"></i><strong>Excellence:</strong> Delivering the highest quality of care</li>
+                    <li class="mb-2"><i class="fas fa-users text-info me-2"></i><strong>Support:</strong> Year-round assistance for all patients</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row g-4 mb-5">
+          <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body text-center p-4">
+                <i class="fas fa-award fa-3x text-warning mb-3"></i>
+                <h5>Award-Winning Care</h5>
+                <p class="text-muted">Recognized for excellence in patient care and medical innovation</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body text-center p-4">
+                <i class="fas fa-microscope fa-3x text-info mb-3"></i>
+                <h5>Advanced Technology</h5>
+                <p class="text-muted">State-of-the-art medical equipment and diagnostic tools</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body text-center p-4">
+                <i class="fas fa-hands-helping fa-3x text-success mb-3"></i>
+                <h5>Community Focus</h5>
+                <p class="text-muted">Committed to serving our community with dedication and care</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="text-center">
+          <button class="btn btn-primary btn-lg px-5" (click)="showHome()">
+            <i class="fas fa-arrow-left me-2"></i>Back to Home
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div class="d-inline-block mb-3">
+        <span class="badge px-4 py-2" style="background: linear-gradient(45deg, #1e3a8a, #0f172a); color: white; font-size: 0.8rem;">MEDICAL EXCELLENCE</span>
+      </div>
+      <h2 class="fw-bold text-primary mb-3" style="font-size: 2.2rem;">Our Medical Services</h2>
+      <p class="lead text-muted">Comprehensive healthcare solutions with state-of-the-art technology</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-lg-3 col-md-6">
+        <div class="service-card card h-100 border-0" (click)="showCardiology()" style="cursor: pointer;">
+          <div class="service-icon-wrapper">
+            <div class="service-icon bg-danger bg-opacity-10">
+              <i class="fas fa-heart-pulse fa-3x text-danger"></i>
+            </div>
+          </div>
+          <div class="card-body text-center p-4">
+            <h4 class="mb-3">Cardiology</h4>
+            <p class="text-muted mb-4">Advanced heart care with cutting-edge diagnostic options and expert cardiologists.</p>
+            <div class="service-features mb-4">
+              <small class="d-block text-muted mb-1"><i class="fas fa-check text-success me-2"></i>24/7 Emergency Care</small>
+              <small class="d-block text-muted mb-1"><i class="fas fa-check text-success me-2"></i>Advanced Diagnostics</small>
+              <small class="d-block text-muted"><i class="fas fa-check text-success me-2"></i>Expert Surgeons</small>
+            </div>
+            <button class="btn btn-danger btn-sm px-4">Learn More</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="service-card card h-100 border-0" (click)="showNeurology()" style="cursor: pointer;">
+          <div class="service-icon-wrapper">
+            <div class="service-icon bg-info bg-opacity-10">
+              <i class="fas fa-brain fa-3x text-info"></i>
+            </div>
+          </div>
+          <div class="card-body text-center p-4">
+            <h4 class="mb-3">Neurology</h4>
+            <p class="text-muted mb-4">Expert neurological care for brain and nervous system disorders.</p>
+            <div class="service-features mb-4">
+              <small class="d-block text-muted mb-1"><i class="fas fa-check text-success me-2"></i>Brain Imaging</small>
+              <small class="d-block text-muted mb-1"><i class="fas fa-check text-success me-2"></i>Stroke Treatment</small>
+              <small class="d-block text-muted"><i class="fas fa-check text-success me-2"></i>Epilepsy Care</small>
+            </div>
+            <button class="btn btn-info btn-sm px-4">Learn More</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="service-card card h-100 border-0" (click)="showOrthopedics()" style="cursor: pointer;">
+          <div class="service-icon-wrapper">
+            <div class="service-icon bg-success bg-opacity-10">
+              <i class="fas fa-bone fa-3x text-success"></i>
+            </div>
+          </div>
+          <div class="card-body text-center p-4">
+            <h4 class="mb-3">Orthopedics</h4>
+            <p class="text-muted mb-4">Comprehensive bone, joint, and musculoskeletal care.</p>
+            <div class="service-features mb-4">
+              <small class="d-block text-muted mb-1"><i class="fas fa-check text-success me-2"></i>Joint Replacement</small>
+              <small class="d-block text-muted mb-1"><i class="fas fa-check text-success me-2"></i>Sports Medicine</small>
+              <small class="d-block text-muted"><i class="fas fa-check text-success me-2"></i>Spine Surgery</small>
+            </div>
+            <button class="btn btn-success btn-sm px-4">Learn More</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="service-card card h-100 border-0" (click)="showPediatrics()" style="cursor: pointer;">
+          <div class="service-icon-wrapper">
+            <div class="service-icon bg-warning bg-opacity-10">
+              <i class="fas fa-baby fa-3x text-warning"></i>
+            </div>
+          </div>
+          <div class="card-body text-center p-4">
+            <h4 class="mb-3">Pediatrics</h4>
+            <p class="text-muted mb-4">Specialized healthcare for infants, children, and adolescents.</p>
+            <div class="service-features mb-4">
+              <small class="d-block text-muted mb-1"><i class="fas fa-check text-success me-2"></i>Child Wellness</small>
+              <small class="d-block text-muted mb-1"><i class="fas fa-check text-success me-2"></i>Vaccinations</small>
+              <small class="d-block text-muted"><i class="fas fa-check text-success me-2"></i>Growth Monitoring</small>
+            </div>
+            <button class="btn btn-warning btn-sm px-4">Learn More</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Cardiology Section -->
+<section id="cardiology" class="py-5 bg-light" *ngIf="currentView === 'cardiology'">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-4 fw-bold text-danger mb-4">
+        <i class="fas fa-heartbeat me-3"></i>Cardiology Department
+      </h2>
+      <p class="lead">Advanced Heart Care at CASPY Hospital</p>
+    </div>
+    
+    <!-- Specialists Section -->
+    <div class="row mb-5">
+      <div class="col-12">
+        <h3 class="text-primary mb-4">Our Cardiology Specialists</h3>
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="card shadow border-0">
+              <div class="card-body text-center p-4">
+                <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
+                <h5>Dr. Rajesh Kumar</h5>
+                <p class="text-muted mb-2">Senior Cardiologist</p>
+                <p class="small">15+ years experience in interventional cardiology</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card shadow border-0">
+              <div class="card-body text-center p-4">
+                <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
+                <h5>Dr. Priya Sharma</h5>
+                <p class="text-muted mb-2">Cardiac Surgeon</p>
+                <p class="small">Specialist in minimally invasive heart surgery</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card shadow border-0">
+              <div class="card-body text-center p-4">
+                <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
+                <h5>Dr. Amit Patel</h5>
+                <p class="text-muted mb-2">Pediatric Cardiologist</p>
+                <p class="small">Expert in congenital heart conditions</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Treatments Section -->
+    <div class="row mb-5">
+      <div class="col-12">
+        <h3 class="text-primary mb-4">Cardiology Treatments & Services</h3>
+        <div class="row g-4">
+          <div class="col-lg-6">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body p-4">
+                <h5 class="text-danger mb-3">
+                  <i class="fas fa-stethoscope me-2"></i>Diagnostic Services
+                </h5>
+                <ul class="list-unstyled">
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>ECG & Echocardiography</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Stress Testing</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Cardiac Catheterization</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>CT & MRI Angiography</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body p-4">
+                <h5 class="text-danger mb-3">
+                  <i class="fas fa-procedures me-2"></i>Treatment Procedures
+                </h5>
+                <ul class="list-unstyled">
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Angioplasty & Stenting</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Bypass Surgery</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Pacemaker Implantation</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Heart Valve Repair</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Facilities Section -->
+    <div class="row mb-5">
+      <div class="col-12">
+        <div class="card border-0 shadow">
+          <div class="card-body p-5">
+            <h4 class="text-primary mb-4">State-of-the-Art Cardiac Facilities</h4>
+            <div class="row">
+              <div class="col-md-6">
+                <p class="mb-3">
+                  <i class="fas fa-hospital text-danger me-2"></i>
+                  <strong>24/7 Cardiac Emergency Unit</strong> - Immediate care for heart emergencies
+                </p>
+                <p class="mb-3">
+                  <i class="fas fa-heartbeat text-danger me-2"></i>
+                  <strong>Advanced Cardiac ICU</strong> - Specialized intensive care for cardiac patients
+                </p>
+              </div>
+              <div class="col-md-6">
+                <p class="mb-3">
+                  <i class="fas fa-microscope text-danger me-2"></i>
+                  <strong>Cardiac Catheterization Lab</strong> - Latest technology for interventional procedures
+                </p>
+                <p class="mb-3">
+                  <i class="fas fa-user-nurse text-danger me-2"></i>
+                  <strong>Cardiac Rehabilitation</strong> - Comprehensive recovery programs
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="text-center">
+      <button class="btn btn-primary btn-lg px-5 me-3" (click)="showHome()">
+        <i class="fas fa-arrow-left me-2"></i>Back to Home
+      </button>
+      <button class="btn btn-danger btn-lg px-5" (click)="showLogin(); scrollToLogin()">
+        <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Neurology Section -->
+<section id="neurology" class="py-5 bg-light" *ngIf="currentView === 'neurology'">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-4 fw-bold text-info mb-4">
+        <i class="fas fa-brain me-3"></i>Neurology Department
+      </h2>
+      <p class="lead">Advanced Brain & Nervous System Care at CASPY Hospital</p>
+    </div>
+    
+    <div class="row mb-5">
+      <div class="col-12">
+        <h3 class="text-primary mb-4">Our Neurology Specialists</h3>
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="card shadow border-0">
+              <div class="card-body text-center p-4">
+                <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
+                <h5>Dr. Neha Gupta</h5>
+                <p class="text-muted mb-2">Senior Neurologist</p>
+                <p class="small">12+ years in stroke and epilepsy treatment</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card shadow border-0">
+              <div class="card-body text-center p-4">
+                <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
+                <h5>Dr. Vikram Singh</h5>
+                <p class="text-muted mb-2">Neurosurgeon</p>
+                <p class="small">Expert in brain and spine surgery</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card shadow border-0">
+              <div class="card-body text-center p-4">
+                <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
+                <h5>Dr. Kavita Joshi</h5>
+                <p class="text-muted mb-2">Pediatric Neurologist</p>
+                <p class="small">Specialist in childhood neurological disorders</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row mb-5">
+      <div class="col-12">
+        <h3 class="text-primary mb-4">Neurology Treatments & Services</h3>
+        <div class="row g-4">
+          <div class="col-lg-6">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body p-4">
+                <h5 class="text-info mb-3">
+                  <i class="fas fa-search me-2"></i>Diagnostic Services
+                </h5>
+                <ul class="list-unstyled">
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>EEG & EMG Testing</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Brain MRI & CT Scans</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Nerve Conduction Studies</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Lumbar Puncture</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body p-4">
+                <h5 class="text-info mb-3">
+                  <i class="fas fa-brain me-2"></i>Treatment Procedures
+                </h5>
+                <ul class="list-unstyled">
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Stroke Treatment</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Epilepsy Management</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Brain Tumor Surgery</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Parkinson's Treatment</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="text-center">
+      <button class="btn btn-primary btn-lg px-5 me-3" (click)="showHome()">
+        <i class="fas fa-arrow-left me-2"></i>Back to Home
+      </button>
+      <button class="btn btn-info btn-lg px-5" (click)="showLogin(); scrollToLogin()">
+        <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Orthopedics Section -->
+<section id="orthopedics" class="py-5 bg-light" *ngIf="currentView === 'orthopedics'">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-4 fw-bold text-success mb-4">
+        <i class="fas fa-bone me-3"></i>Orthopedics Department
+      </h2>
+      <p class="lead">Comprehensive Bone & Joint Care at CASPY Hospital</p>
+    </div>
+    
+    <div class="row mb-5">
+      <div class="col-12">
+        <h3 class="text-primary mb-4">Our Orthopedic Specialists</h3>
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="card shadow border-0">
+              <div class="card-body text-center p-4">
+                <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
+                <h5>Dr. Suresh Reddy</h5>
+                <p class="text-muted mb-2">Senior Orthopedic Surgeon</p>
+                <p class="small">20+ years in joint replacement surgery</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card shadow border-0">
+              <div class="card-body text-center p-4">
+                <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
+                <h5>Dr. Meera Nair</h5>
+                <p class="text-muted mb-2">Sports Medicine Specialist</p>
+                <p class="small">Expert in sports injury treatment</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card shadow border-0">
+              <div class="card-body text-center p-4">
+                <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
+                <h5>Dr. Arjun Mehta</h5>
+                <p class="text-muted mb-2">Spine Specialist</p>
+                <p class="small">Minimally invasive spine surgery expert</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row mb-5">
+      <div class="col-12">
+        <h3 class="text-primary mb-4">Orthopedic Treatments & Services</h3>
+        <div class="row g-4">
+          <div class="col-lg-6">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body p-4">
+                <h5 class="text-success mb-3">
+                  <i class="fas fa-x-ray me-2"></i>Diagnostic Services
+                </h5>
+                <ul class="list-unstyled">
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>X-Ray & MRI Imaging</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Bone Density Scans</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Arthroscopy</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>CT Scans</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body p-4">
+                <h5 class="text-success mb-3">
+                  <i class="fas fa-tools me-2"></i>Treatment Procedures
+                </h5>
+                <ul class="list-unstyled">
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Joint Replacement</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Fracture Treatment</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Spine Surgery</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Sports Injury Repair</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="text-center">
+      <button class="btn btn-primary btn-lg px-5 me-3" (click)="showHome()">
+        <i class="fas fa-arrow-left me-2"></i>Back to Home
+      </button>
+      <button class="btn btn-success btn-lg px-5" (click)="showLogin(); scrollToLogin()">
+        <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Pediatrics Section -->
+<section id="pediatrics" class="py-5 bg-light" *ngIf="currentView === 'pediatrics'">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-4 fw-bold text-warning mb-4">
+        <i class="fas fa-baby me-3"></i>Pediatrics Department
+      </h2>
+      <p class="lead">Specialized Healthcare for Children at CASPY Hospital</p>
+    </div>
+    
+    <div class="row mb-5">
+      <div class="col-12">
+        <h3 class="text-primary mb-4">Our Pediatric Specialists</h3>
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="card shadow border-0">
+              <div class="card-body text-center p-4">
+                <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
+                <h5>Dr. Sunita Agarwal</h5>
+                <p class="text-muted mb-2">Senior Pediatrician</p>
+                <p class="small">18+ years in child healthcare and development</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card shadow border-0">
+              <div class="card-body text-center p-4">
+                <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
+                <h5>Dr. Rohit Malhotra</h5>
+                <p class="text-muted mb-2">Pediatric Surgeon</p>
+                <p class="small">Expert in minimally invasive pediatric surgery</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card shadow border-0">
+              <div class="card-body text-center p-4">
+                <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
+                <h5>Dr. Anjali Verma</h5>
+                <p class="text-muted mb-2">Neonatologist</p>
+                <p class="small">Specialist in newborn and premature baby care</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row mb-5">
+      <div class="col-12">
+        <h3 class="text-primary mb-4">Pediatric Treatments & Services</h3>
+        <div class="row g-4">
+          <div class="col-lg-6">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body p-4">
+                <h5 class="text-warning mb-3">
+                  <i class="fas fa-stethoscope me-2"></i>General Pediatrics
+                </h5>
+                <ul class="list-unstyled">
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Regular Health Checkups</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Vaccination Programs</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Growth & Development Monitoring</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Nutritional Counseling</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body p-4">
+                <h5 class="text-warning mb-3">
+                  <i class="fas fa-heartbeat me-2"></i>Specialized Care
+                </h5>
+                <ul class="list-unstyled">
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Neonatal Intensive Care</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Pediatric Emergency Care</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Childhood Infections Treatment</li>
+                  <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Developmental Disorders</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="text-center">
+      <button class="btn btn-primary btn-lg px-5 me-3" (click)="showHome()">
+        <i class="fas fa-arrow-left me-2"></i>Back to Home
+      </button>
+      <button class="btn btn-warning btn-lg px-5" (click)="showLogin(); scrollToLogin()">
+        <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Doctor Login Section -->
+<section id="doctor-login" class="py-5 bg-light" *ngIf="currentView === 'doctor-login'">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="text-center mb-5">
+          <h2 class="display-4 fw-bold text-warning mb-4">
+            <i class="fas fa-user-md me-3"></i>Doctor Portal
+          </h2>
+          <p class="lead">Secure login for medical professionals</p>
+        </div>
+        
+        <div class="card shadow border-0">
+          <div class="card-body p-5">
+            <h3 class="text-center mb-4">Doctor Login</h3>
+            <form (ngSubmit)="doctorLogin()" #doctorLoginForm="ngForm">
+              <div class="mb-3">
+                <label class="form-label">Doctor ID / Email <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-lg" 
+                       [(ngModel)]="doctorLoginData.email" 
+                       name="doctorEmail" 
+                       [class.is-invalid]="validationErrors.doctorLogin.email"
+                       placeholder="Enter your doctor email"
+                       required>
+                <div class="invalid-feedback" *ngIf="validationErrors.doctorLogin.email">
+                  {{validationErrors.doctorLogin.email}}
+                </div>
+              </div>
+              <div class="mb-4">
+                <label class="form-label">Password <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <input [type]="showDoctorPassword ? 'text' : 'password'" class="form-control form-control-lg" 
+                         [(ngModel)]="doctorLoginData.password" 
+                         name="doctorPassword" 
+                         [class.is-invalid]="validationErrors.doctorLogin.password"
+                         placeholder="Enter your password"
+                         required>
+                  <button class="btn btn-outline-secondary" type="button" (click)="showDoctorPassword = !showDoctorPassword">
+                    <i class="fas" [class.fa-eye]="!showDoctorPassword" [class.fa-eye-slash]="showDoctorPassword"></i>
+                  </button>
+                </div>
+                <div class="invalid-feedback" *ngIf="validationErrors.doctorLogin.password">
+                  {{validationErrors.doctorLogin.password}}
+                </div>
+              </div>
+              <button type="submit" class="btn btn-warning btn-lg w-100 mb-3">
+                <i class="fas fa-sign-in-alt me-2"></i>Sign In as Doctor
+              </button>
+            </form>
+            <div class="text-center">
+              <button class="btn btn-outline-secondary" (click)="showHome()">
+                <i class="fas fa-arrow-left me-2"></i>Back to Home
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Doctor Dashboard -->
+<section id="doctor-dashboard" class="py-5" *ngIf="currentView === 'doctor-dashboard'">
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-12">
+        <div class="bg-warning text-dark p-4 rounded-4">
+          <h2 class="mb-0">
+            <i class="fas fa-user-md me-3"></i>Welcome, {{userName}}!
+          </h2>
+          <p class="mb-0 mt-2">Manage your practice at CASPY Hospital</p>
+        </div>
+      </div>
+    </div>
+    
+
+
+
+
+    <!-- Doctor Profile Summary -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body p-4">
+            <div class="row align-items-center">
+              <div class="col-md-8">
+                <h5 class="mb-3">Doctor Profile</h5>
+                <div class="row">
+                  <div class="col-sm-6 mb-2">
+                    <small class="text-muted">Email:</small>
+                    <div class="fw-semibold">{{userEmail || 'Not Available'}}</div>
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <small class="text-muted">Phone:</small>
+                    <div class="fw-semibold">{{userPhone || 'Not Available'}}</div>
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <small class="text-muted">Specialization:</small>
+                    <div class="fw-semibold">{{doctorProfile.specialization || 'General Medicine'}}</div>
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <small class="text-muted">Age:</small>
+                    <div class="fw-semibold">{{userAge || 'Not Available'}}</div>
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <small class="text-muted">Role:</small>
+                    <div class="fw-semibold">{{userRole || 'DOCTOR'}}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 text-center">
+                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                  <i class="fas fa-user-md fa-2x text-primary"></i>
+                </div>
+                <div class="mt-2">
+                  <span class="badge" style="background: linear-gradient(45deg, #059669, #047857); color: white;">{{userRole === 'ADMIN' ? 'Administrator' : 'Medical Professional'}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+      <div class="col-lg-4 col-md-6">
+        <div class="card h-100 shadow border-0">
+          <div class="card-body text-center p-4">
+            <i class="fas fa-notes-medical fa-4x text-success mb-3"></i>
+            <h4>Create Consultation</h4>
+            <p class="text-muted mb-4">Add consultation notes and prescriptions</p>
+            <button class="btn btn-success" (click)="showCreateConsultation()">New Consultation</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 col-md-6">
+        <div class="card h-100 shadow border-0">
+          <div class="card-body text-center p-4">
+            <i class="fas fa-clock fa-4x text-info mb-3"></i>
+            <h4>Create Availability</h4>
+            <p class="text-muted mb-4">Set your available time slots for appointments</p>
+            <button class="btn btn-info" (click)="showCreateAvailability()" type="button">Set Availability</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+  </div>
+</section>
+
+<!-- Consultation Records Section -->
+<section id="consultation-records" class="py-5 bg-light" *ngIf="currentView === 'consultation-records'">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-4 fw-bold text-primary mb-4">
+        <i class="fas fa-file-medical me-3"></i>Medical History
+      </h2>
+      <p class="lead">View your consultation records and medical history</p>
+    </div>
+    
+    <div class="card shadow border-0">
+      <div class="card-body p-5">
+        <app-consultation-records></app-consultation-records>
+      </div>
+    </div>
+    
+    <div class="text-center mt-4">
+      <button class="btn btn-primary px-4" (click)="goBackFromConsultation()">
+        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Emergency Contact Section -->
+<section id="emergency-contact" class="py-5 bg-light" *ngIf="currentView === 'emergency-contact'">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h1 class="fw-bold text-danger" style="font-size: 2.5rem;">
+        <i class="fas fa-ambulance me-3"></i>Emergency Contact
+      </h1>
+      <p class="lead text-muted">24/7 Emergency Medical Services</p>
+    </div>
+
+    <!-- Emergency Hotlines -->
+    <div class="row g-4 mb-5">
+      <div class="col-lg-4">
+        <div class="card border-0 shadow h-100 text-center">
+          <div class="card-body p-4">
+            <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+              <i class="fas fa-phone fa-2x text-danger"></i>
+            </div>
+            <h4 class="text-danger mb-3">Emergency Hotline</h4>
+            <h2 class="fw-bold mb-3" style="font-size: 3rem; color: #dc2626;">102</h2>
+            <p class="text-muted mb-3">National Emergency Number</p>
+            <a href="tel:102" class="btn btn-danger btn-lg">
+              <i class="fas fa-phone me-2"></i>Call Now
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card border-0 shadow h-100 text-center">
+          <div class="card-body p-4">
+            <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+              <i class="fas fa-hospital fa-2x text-primary"></i>
+            </div>
+            <h4 class="text-primary mb-3">Hospital Direct</h4>
+            <h2 class="fw-bold mb-3" style="font-size: 2rem;">+91 8770645952</h2>
+            <p class="text-muted mb-3">CASPY Hospital Emergency</p>
+            <a href="tel:+918770645952" class="btn btn-primary btn-lg">
+              <i class="fas fa-phone me-2"></i>Call Hospital
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card border-0 shadow h-100 text-center">
+          <div class="card-body p-4">
+            <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+              <i class="fas fa-ambulance fa-2x text-success"></i>
+            </div>
+            <h4 class="text-success mb-3">Ambulance Service</h4>
+            <h2 class="fw-bold mb-3" style="font-size: 2rem;">108</h2>
+            <p class="text-muted mb-3">Free Ambulance Service</p>
+            <a href="tel:108" class="btn btn-success btn-lg">
+              <i class="fas fa-ambulance me-2"></i>Call Ambulance
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hospital Information -->
+    <div class="row g-4 mb-5">
+      <div class="col-lg-6">
+        <div class="card border-0 shadow h-100">
+          <div class="card-body p-4">
+            <h4 class="text-primary mb-4">
+              <i class="fas fa-map-marker-alt me-2"></i>Hospital Location
+            </h4>
+            <div class="mb-3">
+              <h6 class="mb-1">CASPY Hospital</h6>
+              <p class="text-muted mb-2">123 Medical Center, Mumbai, India - 400001</p>
+            </div>
+            <div class="mb-3">
+              <h6 class="mb-1">Emergency Department</h6>
+              <p class="text-muted mb-2">Ground Floor, Main Building</p>
+            </div>
+            <div class="mb-3">
+              <h6 class="mb-1">Parking</h6>
+              <p class="text-muted mb-2">Free emergency parking available</p>
+            </div>
+            <button class="btn btn-outline-primary">
+              <i class="fas fa-directions me-2"></i>Get Directions
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card border-0 shadow h-100">
+          <div class="card-body p-4">
+            <h4 class="text-info mb-4">
+              <i class="fas fa-envelope me-2"></i>Contact Information
+            </h4>
+            <div class="mb-3">
+              <h6 class="mb-1">Emergency Email</h6>
+              <p class="text-muted mb-2">
+                <a href="mailto:emergency@caspyhospital.com" class="text-decoration-none">
+                  emergency@caspyhospital.com
+                </a>
+              </p>
+            </div>
+            <div class="mb-3">
+              <h6 class="mb-1">General Inquiries</h6>
+              <p class="text-muted mb-2">
+                <a href="mailto:hospitalserviceisg2025@gmail.com" class="text-decoration-none">
+                  hospitalserviceisg2025@gmail.com
+                </a>
+              </p>
+            </div>
+            <div class="mb-3">
+              <h6 class="mb-1">WhatsApp Emergency</h6>
+              <p class="text-muted mb-2">
+                <a href="https://wa.me/918770645952" class="text-decoration-none">
+                  +91 8770645952
+                </a>
+              </p>
+            </div>
+            <button class="btn btn-outline-info">
+              <i class="fas fa-comments me-2"></i>Live Chat Support
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ambulance Availability -->
+    <div class="row mb-5">
+      <div class="col-12">
+        <div class="card border-0 shadow">
+          <div class="card-body p-4">
+            <h4 class="text-success mb-4">
+              <i class="fas fa-ambulance me-2"></i>Ambulance Availability Status
+            </h4>
+            <div class="row g-4">
+              <div class="col-md-3">
+                <div class="text-center p-3 border rounded">
+                  <div class="bg-success rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+                    <i class="fas fa-check text-white"></i>
+                  </div>
+                  <h6 class="mb-1">Basic Ambulance</h6>
+                  <p class="text-success mb-0">3 Available</p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="text-center p-3 border rounded">
+                  <div class="bg-success rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+                    <i class="fas fa-check text-white"></i>
+                  </div>
+                  <h6 class="mb-1">Advanced Life Support</h6>
+                  <p class="text-success mb-0">2 Available</p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="text-center p-3 border rounded">
+                  <div class="bg-warning rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+                    <i class="fas fa-exclamation text-white"></i>
+                  </div>
+                  <h6 class="mb-1">ICU Ambulance</h6>
+                  <p class="text-warning mb-0">1 Available</p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="text-center p-3 border rounded">
+                  <div class="bg-success rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+                    <i class="fas fa-check text-white"></i>
+                  </div>
+                  <h6 class="mb-1">Neonatal Ambulance</h6>
+                  <p class="text-success mb-0">1 Available</p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 p-3 bg-light rounded">
+              <p class="mb-2"><strong>Average Response Time:</strong> 8-12 minutes</p>
+              <p class="mb-0"><strong>Coverage Area:</strong> Mumbai Metropolitan Region</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center">
+      <button class="btn btn-primary btn-lg px-5" (click)="showHome()">
+        <i class="fas fa-arrow-left me-2"></i>Back to Home
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Appointment Management Section -->
+<section id="appointment-management" class="py-5 bg-light" *ngIf="currentView === 'appointment-management'">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h1 class="display-3 fw-bold text-primary mb-4">
+        <i class="fas fa-calendar-check me-3 text-success"></i>Appointment Management System
+      </h1>
+      <p class="lead fs-4 text-muted">Comprehensive healthcare appointment scheduling and management</p>
+      <div class="bg-primary bg-opacity-10 p-3 rounded-4 d-inline-block">
+        <small class="text-primary fw-semibold">CASPY Hospital - Professional Medical Services</small>
+      </div>
+    </div>
+    
+    <app-appointment-scheduling></app-appointment-scheduling>
+    
+    <div class="text-center mt-5">
+      <button class="btn btn-primary px-4" (click)="currentView = 'dashboard'; scrollToDashboard()">
+        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Doctor Availability Section -->
+<section id="doctor-availability" class="py-5 bg-light" *ngIf="currentView === 'doctor-availability'">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h1 class="display-3 fw-bold text-primary mb-4">
+        <i class="fas fa-clock me-3 text-info"></i>Doctor Availability Management
+      </h1>
+      <p class="lead fs-4 text-muted">Manage doctor schedules and availability slots</p>
+      <div class="bg-primary bg-opacity-10 p-3 rounded-4 d-inline-block">
+        <small class="text-primary fw-semibold">CASPY Hospital - Professional Medical Services</small>
+      </div>
+    </div>
+    
+    <app-doctor-availabilty></app-doctor-availabilty>
+    
+    <div class="text-center mt-5">
+      <button class="btn btn-primary px-4" (click)="currentView = 'doctor-dashboard'; scrollToDoctorDashboard()">
+        <i class="fas fa-arrow-left me-2"></i>Back to Doctor Dashboard
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Professional Footer -->
+<footer id="contact" class="bg-dark text-white">
+  <!-- Main Footer Content -->
+  <div class="py-5">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Hospital Information -->
+        <div class="col-lg-4 col-md-6">
+          <div class="mb-4">
+            <div class="logo-container d-flex align-items-center mb-3">
+              <div class="logo-icon me-2">
+                <i class="fas fa-heartbeat text-danger"></i>
+                <i class="fas fa-plus-circle text-success"></i>
+              </div>
+              <div class="logo-text">
+                <span class="brand-caspy fs-4 fw-bold text-primary">CASPY</span>
+                <span class="brand-hospital fs-4 fw-bold text-light">Hospital</span>
+              </div>
+            </div>
+            <p class="text-light mb-3">Leading healthcare provider committed to delivering exceptional medical care with compassion, innovation, and excellence.</p>
+            <div class="d-flex gap-3">
+              <a href="#" class="text-light hover-primary"><i class="fab fa-facebook-f fa-lg"></i></a>
+              <a href="#" class="text-light hover-primary"><i class="fab fa-twitter fa-lg"></i></a>
+              <a href="#" class="text-light hover-primary"><i class="fab fa-linkedin-in fa-lg"></i></a>
+              <a href="#" class="text-light hover-primary"><i class="fab fa-instagram fa-lg"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="col-lg-2 col-md-6">
+          <h5 class="text-primary mb-3">Quick Links</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="#" class="text-light text-decoration-none hover-primary" (click)="showHome(); $event.preventDefault()">Home</a></li>
+            <li class="mb-2"><a href="#" class="text-light text-decoration-none hover-primary" (click)="showAbout(); $event.preventDefault()">About Us</a></li>
+            <li class="mb-2"><a href="#" class="text-light text-decoration-none hover-primary" (click)="scrollToServices(); $event.preventDefault()">Services</a></li>
+            <li class="mb-2"><a href="#" class="text-light text-decoration-none hover-primary" (click)="showDoctorLogin(); $event.preventDefault()">Doctor Portal</a></li>
+            <li class="mb-2"><a href="#" class="text-light text-decoration-none hover-primary" (click)="showEmergencyContact(); $event.preventDefault()">Emergency</a></li>
+          </ul>
+        </div>
+
+        <!-- Medical Services -->
+        <div class="col-lg-2 col-md-6">
+          <h5 class="text-primary mb-3">Medical Services</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="#" class="text-light text-decoration-none hover-primary" (click)="showCardiology(); $event.preventDefault()">Cardiology</a></li>
+            <li class="mb-2"><a href="#" class="text-light text-decoration-none hover-primary" (click)="showNeurology(); $event.preventDefault()">Neurology</a></li>
+            <li class="mb-2"><a href="#" class="text-light text-decoration-none hover-primary" (click)="showOrthopedics(); $event.preventDefault()">Orthopedics</a></li>
+            <li class="mb-2"><a href="#" class="text-light text-decoration-none hover-primary" (click)="showPediatrics(); $event.preventDefault()">Pediatrics</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="col-lg-4 col-md-6">
+          <h5 class="text-primary mb-3">Contact Information</h5>
+          <div class="contact-info">
+            <div class="d-flex align-items-start mb-3">
+              <i class="fas fa-map-marker-alt text-primary me-3 mt-1"></i>
+              <div>
+                <strong>Address:</strong><br>
+                <span class="text-light">123 Medical Center Drive<br>Mumbai, Maharashtra 400001<br>India</span>
+              </div>
+            </div>
+            <div class="d-flex align-items-center mb-3">
+              <i class="fas fa-phone text-primary me-3"></i>
+              <div>
+                <strong>Phone:</strong><br>
+                <a href="tel:+918770645952" class="text-light text-decoration-none hover-primary">+91 8770645952</a>
+              </div>
+            </div>
+            <div class="d-flex align-items-center mb-3">
+              <i class="fas fa-envelope text-primary me-3"></i>
+              <div>
+                <strong>Email:</strong><br>
+                <a href="mailto:hospitalserviceisg2025@gmail.com" class="text-light text-decoration-none hover-primary">hospitalserviceisg2025@gmail.com</a>
+              </div>
+            </div>
+            <div class="d-flex align-items-center mb-3">
+              <i class="fas fa-ambulance text-danger me-3"></i>
+              <div>
+                <strong>Emergency:</strong><br>
+                <a href="tel:102" class="text-danger text-decoration-none fw-bold">102 (24/7)</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hospital Stats -->
+      <div class="row mt-5 pt-4 border-top border-secondary">
+        <div class="col-12">
+          <div class="row text-center">
+            <div class="col-md-3 col-6 mb-3">
+              <div class="stat-item">
+                <h3 class="text-primary fw-bold mb-1">5000+</h3>
+                <small class="text-light">Patients Treated</small>
+              </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+              <div class="stat-item">
+                <h3 class="text-success fw-bold mb-1">200+</h3>
+                <small class="text-light">Expert Doctors</small>
+              </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+              <div class="stat-item">
+                <h3 class="text-warning fw-bold mb-1">15+</h3>
+                <small class="text-light">Medical Specialties</small>
+              </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+              <div class="stat-item">
+                <h3 class="text-info fw-bold mb-1">24/7</h3>
+                <small class="text-light">Emergency Care</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Footer -->
+  <div class="bg-black py-3">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <p class="mb-0 text-light">
+            <small>&copy; 2024 CASPY Hospital. All rights reserved. | 
+            <a href="#" class="text-primary text-decoration-none">Privacy Policy</a> | 
+            <a href="#" class="text-primary text-decoration-none">Terms of Service</a> | 
+            <a href="#" class="text-primary text-decoration-none">Patient Rights</a></small>
+          </p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <div class="d-flex justify-content-md-end justify-content-start align-items-center gap-3">
+            <small class="text-light">Accredited by:</small>
+            <span class="badge bg-success">NABH</span>
+            <span class="badge bg-primary">ISO 9001:2015</span>
+            <span class="badge bg-warning text-dark">JCI</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
